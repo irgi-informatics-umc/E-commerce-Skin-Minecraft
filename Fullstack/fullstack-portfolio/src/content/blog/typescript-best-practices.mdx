@@ -1,0 +1,81 @@
+---
+title: "TypeScript Best Practices for 2024"
+description: "Essential TypeScript patterns and practices to write safer, more maintainable code in your next project."
+date: "2024-01-10"
+tags: ["TypeScript", "Best Practices", "Development"]
+---
+
+## Introduction
+
+TypeScript has become an essential tool for modern JavaScript development. Here are the best practices I've adopted to write cleaner, safer TypeScript code.
+
+## 1. Prefer `type` over `interface` for Unions
+
+While both `type` and `interface` have their places, `type` aliases are more flexible:
+
+```typescript
+// Good: Type aliases support unions
+type Status = 'idle' | 'loading' | 'success' | 'error';
+
+// Can't do this with interface!
+```
+
+## 2. Use Utility Types
+
+TypeScript provides powerful utility types that can reduce boilerplate:
+
+```typescript
+// Make all properties optional
+type PartialUser = Partial<User>;
+
+// Make all properties required
+type RequiredUser = Required<User>;
+
+// Pick specific properties
+type UserName = Pick<User, 'firstName' | 'lastName'>;
+
+// Omit specific properties
+type UserWithoutId = Omit<User, 'id'>;
+```
+
+## 3. Narrow Types with Type Guards
+
+Avoid `any` and use proper type narrowing:
+
+```typescript
+function isApiResponse<T>(response: unknown): response is ApiResponse<T> {
+  return (
+    typeof response === 'object' &&
+    response !== null &&
+    'data' in response &&
+    'status' in response
+  );
+}
+
+// Now TypeScript knows the type!
+if (isApiResponse(response)) {
+  console.log(response.data); // Properly typed
+}
+```
+
+## 4. Generic Constraints
+
+Use generics with constraints for reusable, type-safe functions:
+
+```typescript
+interface HasId {
+  id: string;
+}
+
+function findById<T extends HasId>(items: T[], id: string): T | undefined {
+  return items.find(item => item.id === id);
+}
+```
+
+## Conclusion
+
+TypeScript is a powerful tool that gets even better when used correctly. These practices will help you write more maintainable and type-safe code.
+
+---
+
+*What TypeScript tips have you discovered? Share them with the community!*
